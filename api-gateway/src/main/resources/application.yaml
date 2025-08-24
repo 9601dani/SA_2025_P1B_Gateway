@@ -30,11 +30,32 @@ spring:
                   - "*"
                 maxAge: 3600
           routes:
-            - id: user-public-routes
-              uri: ${CLIENT_ROUTE_URI:http://localhost:8001}
+            - id: auth-public-routes
+              uri: ${AUTH_ROUTE_URI:http://localhost:8001}
               predicates:
-                - Path=/v1/users/login
+                - Path=/v1/auth/**
+
+
+            - id: user-public-routes
+              uri: ${USER_ROUTE_URI:http://localhost:8002}
+              predicates:
+                - Path=/v1/users/{segment}
+            - id: user-private-routes
+              uri: ${USER_ROUTE_URI:http://localhost:8002}
+              predicates:
+                - Path=/v1/users/**
               filters:
                 - JwtVerifyFilterFactory
+
+
+
+            - id: client-public-routes
+              uri: ${CLIENT_ROUTE_URI:http://localhost:8003}
+              predicates:
+                - Path=/v1/client/login
+              filters:
+                - JwtVerifyFilterFactory
+
+
 
 
